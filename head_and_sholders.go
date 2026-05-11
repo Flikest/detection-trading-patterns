@@ -2,12 +2,12 @@ package detectedtradingpatterns
 
 import mathutils "github.com/Flikest/detection-trading-patterns/math_utils"
 
-func (p *patterns) HeadAndShoulders(request request, deviation float64) PatternResult {
+func (p *patterns) HeadAndShoulders(request request) PatternResult {
 	response := PatternResult{}
 
 	avgPoints := mathutils.CalcAveragesOHLC(request.data)
 
-	zigzag := Zigzag(avgPoints, deviation, true)
+	zigzag := Zigzag(avgPoints, request.threshold, true)
 
 	znachimieTochki := []float64{}
 
@@ -21,13 +21,13 @@ func (p *patterns) HeadAndShoulders(request request, deviation float64) PatternR
 	result := append(localMinimums, localMaximums...)
 
 	if len(localMinimums) == 2 && len(localMaximums) == 3 &&
-		localMaximums[0].Price+localMaximums[2].Price <= max(localMaximums[0].Price, localMaximums[2].Price)*deviation &&
+		localMaximums[0].Price+localMaximums[2].Price <= max(localMaximums[0].Price, localMaximums[2].Price)*request.threshold &&
 		max(localMaximums[0].Price, localMaximums[1].Price, localMaximums[2].Price) == localMaximums[1].Price {
 		response.PatternName = "head and shoulders"
 	} else if len(localMinimums) > 2 && len(localMaximums) > 3 {
 		response.PatternName = "complex head and shoulders"
 	} else if len(localMinimums) == 3 && len(localMaximums) == 2 &&
-		localMinimums[0].Price+localMinimums[2].Price <= max(localMinimums[0].Price, localMinimums[2].Price)*deviation &&
+		localMinimums[0].Price+localMinimums[2].Price <= max(localMinimums[0].Price, localMinimums[2].Price)*request.threshold &&
 		max(localMinimums[0].Price, localMinimums[1].Price, localMinimums[2].Price) == localMinimums[1].Price {
 		response.PatternName = "reversed head and shoulders"
 	} else if len(localMinimums) > 3 && len(localMaximums) > 2 {

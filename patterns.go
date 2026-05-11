@@ -2,7 +2,7 @@ package detectedtradingpatterns
 
 import "math"
 
-type patterns struct{}
+type Patterns struct{}
 
 type OHLC struct {
 	Open, High, Low, Close float64
@@ -19,7 +19,7 @@ type PatternResult struct {
 	Confidence  float64
 }
 
-type request struct {
+type Request struct {
 	data      []OHLC
 	threshold float64
 }
